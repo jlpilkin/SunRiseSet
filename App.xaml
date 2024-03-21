@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="SunRiseSet.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SunRiseSet">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <!-- Other merged dictionaries here -->
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Other app resources here -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ErrorBackground" Color="#FFAAAA"/>
+                    <SolidColorBrush x:Key="Default" Color="Transparent"/>
+                    <SolidColorBrush x:Key="CanvasBackground" Color="White"/>
+                    <SolidColorBrush x:Key="CanvasElipseOutline" Color="Blue"/>
+                    <SolidColorBrush x:Key="CanvasTextColor" Color="Black"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ErrorBackground" Color="#770000"/>
+                    <SolidColorBrush x:Key="Default" Color="Transparent"/>
+                    <SolidColorBrush x:Key="CanvasBackground" Color="Black"/>
+                    <SolidColorBrush x:Key="CanvasElipseOutline" Color="Cyan"/>
+                    <SolidColorBrush x:Key="CanvasTextColor" Color="White"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

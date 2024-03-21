@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="SunRiseSet.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SunRiseSet"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d"
+    Closed="Window_Closed"
+    Title="SunRiseSet">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="12" RowSpacing="12" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <!-- STEP 1: Add DropDownButton & ToggleSwitch CODE -->
+            <TextBox x:Name="latitude" Header="Latitude" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="300" Width="Auto" TextChanged="latitude_TextChanged" Text=""></TextBox>
+            <TextBox x:Name="longitude" Header="Longitude" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="300" Width="Auto" TextChanged="longitude_TextChanged" Text=""></TextBox>
+        </Grid>
+
+        <Grid x:Name="Control1" Grid.Row="1" ColumnSpacing="30" RowSpacing="12" Margin="12">
+            <!-- STEP 3: Define column & row positioning -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <!-- STEP 4: Add Styling for BUTTON -->
+            <TextBlock x:Name="declinationAngle" Text="Declination Angle (Deg):" Grid.Row="0" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="declinationAngleValue" Text="TBD" Grid.Row="0" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="rightAscension" Text="Right Ascension (Deg):" Grid.Row="0" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="rightAscensionValue" Text="TBD" Grid.Row="0" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="solarDistance" Text="Solar Distance (AU):" Grid.Row="1" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="solarDistanceValue" Text="TBD" Grid.Row="1" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="solarLongitude" Text="Solar Longitude (Deg):" Grid.Row="1" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="solarLongitudeValue" Text="TBD" Grid.Row="1" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="gmstLabel" Text="GMST:" Grid.Row="2" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="gmstValue" Text="TBD" Grid.Row="2" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="earthRotationAngle" Text="Earth Rotation Angle (Deg):" Grid.Row="2" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="earthRotationAngleValue" Text="TBD" Grid.Row="2" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="gastLabel" Text="GAST:" Grid.Row="3" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="gastValue" Text="TBD" Grid.Row="3" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="lhaLabel" Text="LHA:" Grid.Row="3" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="lhaValue" Text="TBD" Grid.Row="3" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="altitudeLabel" Text="Altitude (Deg):" Grid.Row="4" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="altitudeValue" Text="TBD" Grid.Row="4" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="azimuthLabel" Text="Azimuth (Deg):" Grid.Row="4" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="azimuthValue" Text="TBD" Grid.Row="4" Grid.Column="3"></TextBlock>
+            <!-- STEP 2: Add BUTTON CODE -->
+        </Grid>
+        <Grid Margin="12" RowSpacing="12" Grid.Row="2">
+            <canvas:CanvasControl x:Name="WindowCanvas" Draw="CanvasControl_Draw" ClearColor="CornflowerBlue"/>
+        </Grid>
+    </Grid>
+</Window>

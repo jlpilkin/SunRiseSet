@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SunRiseSet (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SunRiseSet (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
