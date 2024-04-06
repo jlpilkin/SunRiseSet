@@ -14,14 +14,18 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="ErrorBackground" Color="#FFAAAA"/>
+                    <SolidColorBrush x:Key="ErrorText" Color="#FF2222"/>
                     <SolidColorBrush x:Key="Default" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DefaultText" Color="#000000"/>
                     <SolidColorBrush x:Key="CanvasBackground" Color="White"/>
                     <SolidColorBrush x:Key="CanvasElipseOutline" Color="Blue"/>
                     <SolidColorBrush x:Key="CanvasTextColor" Color="Black"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="ErrorBackground" Color="#770000"/>
+                    <SolidColorBrush x:Key="ErrorText" Color="#FF8888"/>
                     <SolidColorBrush x:Key="Default" Color="Transparent"/>
+                    <SolidColorBrush x:Key="DefaultText" Color="#FFFFFF"/>
                     <SolidColorBrush x:Key="CanvasBackground" Color="Black"/>
                     <SolidColorBrush x:Key="CanvasElipseOutline" Color="Cyan"/>
                     <SolidColorBrush x:Key="CanvasTextColor" Color="White"/>

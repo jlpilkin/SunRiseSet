@@ -778,6 +778,31 @@ namespace SunRiseSet
                 )
             );
 
+            // If the target hour angle is infinite or NaN, then the Sun is either always above or below the horizon
+            if (double.IsInfinity(targetHourAngle) || double.IsNaN(targetHourAngle))
+            {
+                return new SunState()
+                {
+                    Latitude = latitude,
+                    Longitude = longitude,
+                    DateTimeUTC = dtTarget,
+                    JD2000Utc = julianDayUtc0h,
+                    GastH = GAST_H(julianDayUtc0h, julianDayUtc0h, dtTarget),
+                    Precision = 0,
+                    SunLongitudeDistance = sunLongitudeDistanceUtcNow,
+                    SunRightAscensionDeclination = GetSunRightAscensionDeclination(julianDayUtc0h, sunLongitudeDistanceUtcNow),
+                    LHAAltitudeAzimuth = GetSunLHAAltitudeAzimuth(
+                        GAST_H(julianDayUtc0h, julianDayUtc0h, dtTarget),
+                        latitude,
+                        longitude,
+                        GetSunRightAscensionDeclination(julianDayUtc0h, sunLongitudeDistanceUtcNow).RightAscension,
+                        GetSunRightAscensionDeclination(julianDayUtc0h, sunLongitudeDistanceUtcNow).Declination
+                    ),
+                    SunPosition = sunPositionTarget,
+                    IsInvalid = true
+                };
+            }
+
             // Calculate the approximate Julian Day for the target altitude
             double jDateDiff = targetHourAngle / 360.0;
             double jd2000UtcTarget = 0.0;

@@ -10,9 +10,11 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -278,6 +280,105 @@ namespace SunRiseSet
             lhaValue.Text = lhaNow.ToString("F10");
             altitudeValue.Text = altitudeNow.ToString("F10");
             azimuthValue.Text = azimuthNow.ToString("F10");
+
+            var tz = DateTimeZoneProviders.Tzdb.GetSystemDefault(); // Get the system's time zone
+            sunriseValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.Sunrise.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.Sunrise.IsInvalid)
+            {
+                sunriseLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                sunriseValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                sunriseLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                sunriseValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            sunsetValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.Sunset.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.Sunset.IsInvalid)
+            {
+                sunsetLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                sunsetValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                sunsetLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                sunsetValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            solarNoonValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.SolarNoon.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            solarMidnightValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.SolarMidnight.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            civilDawnValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.CivilDawn.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.CivilDawn.IsInvalid)
+            {
+                civilDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                civilDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                civilDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                civilDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            civilDuskValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.CivilDusk.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.CivilDusk.IsInvalid)
+            {
+                civilDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                civilDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                civilDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                civilDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            nauticalDawnValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.NauticalDawn.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.NauticalDawn.IsInvalid)
+            {
+                nauticalDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                nauticalDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                nauticalDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                nauticalDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            nauticalDuskValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.NauticalDusk.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.NauticalDusk.IsInvalid)
+            {
+                nauticalDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                nauticalDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                nauticalDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                nauticalDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }   
+
+            astronomicalDawnValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.AstronomicalDawn.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.AstronomicalDawn.IsInvalid)
+            {
+                astronomicalDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                astronomicalDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                astronomicalDawnLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                astronomicalDawnValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
+
+            astronomicalDuskValue.Text = new ZonedDateTime(Instant.FromDateTimeUtc(_sunStates.AstronomicalDusk.DateTimeUTC), tz).ToString("h':'mm':'ss' 'tt' 'x", CultureInfo.InvariantCulture);
+            if (_sunStates.AstronomicalDusk.IsInvalid)
+            {
+                astronomicalDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+                astronomicalDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["ErrorText"];
+            }
+            else
+            {
+                astronomicalDuskLabel.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+                astronomicalDuskValue.Foreground = (SolidColorBrush)Application.Current.Resources["DefaultText"];
+            }
         }
 
         HoursMinutesSeconds getGMST_HMS(double gmstValue)

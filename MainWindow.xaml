@@ -14,7 +14,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" MinHeight="332"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Margin="12" RowSpacing="12" Grid.Row="0">
@@ -36,11 +36,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
+                <RowDefinition Height="*" MinHeight="20" />
             </Grid.RowDefinitions>
             <!-- STEP 4: Add Styling for BUTTON -->
             <TextBlock x:Name="declinationAngle" Text="Declination Angle (Deg):" Grid.Row="0" Grid.Column="0"></TextBlock>
@@ -57,12 +62,32 @@
             <TextBlock x:Name="earthRotationAngleValue" Text="TBD" Grid.Row="2" Grid.Column="3"></TextBlock>
             <TextBlock x:Name="gastLabel" Text="GAST:" Grid.Row="3" Grid.Column="0"></TextBlock>
             <TextBlock x:Name="gastValue" Text="TBD" Grid.Row="3" Grid.Column="1"></TextBlock>
-            <TextBlock x:Name="lhaLabel" Text="LHA:" Grid.Row="3" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="lhaLabel" Text="LHA (Deg):" Grid.Row="3" Grid.Column="2"></TextBlock>
             <TextBlock x:Name="lhaValue" Text="TBD" Grid.Row="3" Grid.Column="3"></TextBlock>
             <TextBlock x:Name="altitudeLabel" Text="Altitude (Deg):" Grid.Row="4" Grid.Column="0"></TextBlock>
             <TextBlock x:Name="altitudeValue" Text="TBD" Grid.Row="4" Grid.Column="1"></TextBlock>
             <TextBlock x:Name="azimuthLabel" Text="Azimuth (Deg):" Grid.Row="4" Grid.Column="2"></TextBlock>
             <TextBlock x:Name="azimuthValue" Text="TBD" Grid.Row="4" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="solarNoonLabel" Text="Solar Noon:" Grid.Row="5" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="solarNoonValue" Text="TBD" Grid.Row="5" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="solarMidnightLabel" Text="Solar Midnight:" Grid.Row="5" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="solarMidnightValue" Text="TBD" Grid.Row="5" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="sunriseLabel" Text="Sunrise:" Grid.Row="6" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="sunriseValue" Text="TBD" Grid.Row="6" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="sunsetLabel" Text="Sunset:" Grid.Row="6" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="sunsetValue" Text="TBD" Grid.Row="6" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="civilDawnLabel" Text="Civil Dawn:" Grid.Row="7" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="civilDawnValue" Text="TBD" Grid.Row="7" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="civilDuskLabel" Text="Civil Dusk:" Grid.Row="7" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="civilDuskValue" Text="TBD" Grid.Row="7" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="nauticalDawnLabel" Text="Nautical Dawn:" Grid.Row="8" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="nauticalDawnValue" Text="TBD" Grid.Row="8" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="nauticalDuskLabel" Text="Nautical Dusk:" Grid.Row="8" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="nauticalDuskValue" Text="TBD" Grid.Row="8" Grid.Column="3"></TextBlock>
+            <TextBlock x:Name="astronomicalDawnLabel" Text="Astronomical Dawn:" Grid.Row="9" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="astronomicalDawnValue" Text="TBD" Grid.Row="9" Grid.Column="1"></TextBlock>
+            <TextBlock x:Name="astronomicalDuskLabel" Text="Astronomical Dusk:" Grid.Row="9" Grid.Column="2"></TextBlock>
+            <TextBlock x:Name="astronomicalDuskValue" Text="TBD" Grid.Row="9" Grid.Column="3"></TextBlock>
             <!-- STEP 2: Add BUTTON CODE -->
         </Grid>
         <Grid Margin="12" RowSpacing="12" Grid.Row="2">

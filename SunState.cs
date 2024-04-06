@@ -18,5 +18,6 @@ namespace SunRiseSet
         public SunRightAscensionDeclination SunRightAscensionDeclination { get; set; }
         public LHAAltitudeAzimuth LHAAltitudeAzimuth { get; set; }
         public SunPosition SunPosition { get; set; }
+        public bool IsInvalid { get; set; }
     }
 }
