@@ -810,9 +810,10 @@ namespace SunRiseSet
             double jDateStart = sunStateSolarNoon.JD2000Utc;
 
             // If the target hour angle is infinite or NaN, then set it to a small value
+            bool isSearchingFromMidnight = false;
             if (double.IsInfinity(targetHourAngle) || double.IsNaN(targetHourAngle))
             {
-                targetHourAngle = 0.01;
+                targetHourAngle = 0.1;
 
                 double diffSolarMidnight = Math.Abs(targetAltitude - sunStateSolarMidnight.LHAAltitudeAzimuth.Altitude);
                 double diffSolarNoon = Math.Abs(targetAltitude - sunStateSolarNoon.LHAAltitudeAzimuth.Altitude);
@@ -821,11 +822,17 @@ namespace SunRiseSet
                 if (diffSolarMidnight < diffSolarNoon)
                 {
                     jDateStart = sunStateSolarMidnight.JD2000Utc;
+                    dtTarget = sunStateSolarMidnight.DateTimeUTC;
+                    isSearchingFromMidnight = true;
                 }
             }
 
             // Calculate the approximate Julian Day for the target altitude
             double jDateDiff = targetHourAngle / 360.0;
+            if (isSearchingFromMidnight)
+            {
+                jDateDiff = -jDateDiff;
+            }
             double jd2000UtcTarget = 0.0;
             switch (sunPositionTarget)
             {
@@ -941,9 +948,8 @@ namespace SunRiseSet
                 dtTarget = dtTarget.AddHours(diffGastH);
 
                 // If the new altitude is further from the target, reduce the multiplier
-                if (Math.Abs(targetAltitude - lhaAltitudeAzimuthTarget.Altitude) > Math.Abs(diffAltitude) && localMultiplier > 1)
+                if (Math.Abs(targetAltitude - lhaAltitudeAzimuthTarget.Altitude) > Math.Abs(diffAltitude))
                 {
-                    localMultiplier -= 1;
                     gastHTarget = gastHTarget - diffGastH;
                     jd2000UtcTarget = jd2000UtcTarget - diffGastH / TimeSpan.FromDays(1).TotalHours;
                     sunLongitudeDistanceUtcTarget = GetSunLongitudeDistance(jd2000UtcTarget);
@@ -957,6 +963,14 @@ namespace SunRiseSet
                     );
                     dtTarget = dtTarget.AddHours(-diffGastH);
                     numIterations++;
+                    if (localMultiplier > 1)
+                    {
+                        localMultiplier -= 1;
+                    }
+                    else
+                    {
+                        altitudeRatePerGastH *= 2.0;
+                    }
                     continue;
                 }
 
