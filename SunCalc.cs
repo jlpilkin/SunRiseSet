@@ -766,20 +766,10 @@ namespace SunRiseSet
             // Calculate the target altitude
             double targetAltitude = GetTargetAltitude(sunPositionTarget, sunLongitudeDistanceUtcNow);
 
-            // Calculate the hour angle to approximate the Sun's at the target altitude
-            double targetHourAngle = RadiansToDegrees(
-                Math.Acos(
-                    (
-                        Math.Sin(DegreesToRadians(targetAltitude)) - Math.Sin(DegreesToRadians(latitude)) * Math.Sin(DegreesToRadians(sunStateSolarNoon.SunRightAscensionDeclination.Declination))
-                    ) /
-                    (
-                        Math.Cos(DegreesToRadians(latitude)) * Math.Cos(DegreesToRadians(sunStateSolarNoon.SunRightAscensionDeclination.Declination))
-                    )
-                )
-            );
-
-            // If the target hour angle is infinite or NaN, then the Sun is either always above or below the horizon
-            if (double.IsInfinity(targetHourAngle) || double.IsNaN(targetHourAngle))
+            if (
+                targetAltitude < sunStateSolarMidnight.LHAAltitudeAzimuth.Altitude
+                || targetAltitude > sunStateSolarNoon.LHAAltitudeAzimuth.Altitude
+            )
             {
                 return new SunState()
                 {
@@ -801,6 +791,37 @@ namespace SunRiseSet
                     SunPosition = sunPositionTarget,
                     IsInvalid = true
                 };
+
+            }
+
+            // Calculate the hour angle to approximate the Sun's at the target altitude
+            double targetHourAngle = RadiansToDegrees(
+                Math.Acos(
+                    (
+                        Math.Sin(DegreesToRadians(targetAltitude)) - Math.Sin(DegreesToRadians(latitude)) * Math.Sin(DegreesToRadians(sunStateSolarNoon.SunRightAscensionDeclination.Declination))
+                    ) /
+                    (
+                        Math.Cos(DegreesToRadians(latitude)) * Math.Cos(DegreesToRadians(sunStateSolarNoon.SunRightAscensionDeclination.Declination))
+                    )
+                )
+            );
+
+            // Determine where to start the search for the target hour angle
+            double jDateStart = sunStateSolarNoon.JD2000Utc;
+
+            // If the target hour angle is infinite or NaN, then set it to a small value
+            if (double.IsInfinity(targetHourAngle) || double.IsNaN(targetHourAngle))
+            {
+                targetHourAngle = 0.01;
+
+                double diffSolarMidnight = Math.Abs(targetAltitude - sunStateSolarMidnight.LHAAltitudeAzimuth.Altitude);
+                double diffSolarNoon = Math.Abs(targetAltitude - sunStateSolarNoon.LHAAltitudeAzimuth.Altitude);
+
+                // If the target altitude is closer to the Sun's position at midnight, then start the search at midnight
+                if (diffSolarMidnight < diffSolarNoon)
+                {
+                    jDateStart = sunStateSolarMidnight.JD2000Utc;
+                }
             }
 
             // Calculate the approximate Julian Day for the target altitude
@@ -809,35 +830,35 @@ namespace SunRiseSet
             switch (sunPositionTarget)
             {
                 case SunPosition.Sunrise:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc - jDateDiff;
+                    jd2000UtcTarget = jDateStart - jDateDiff;
                     break;
                 case SunPosition.Sunset:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc + jDateDiff;
+                    jd2000UtcTarget = jDateStart + jDateDiff;
                     break;
                 case SunPosition.CivilDawn:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc - jDateDiff;
+                    jd2000UtcTarget = jDateStart - jDateDiff;
                     break;
                 case SunPosition.CivilDusk:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc + jDateDiff;
+                    jd2000UtcTarget = jDateStart + jDateDiff;
                     break;
                 case SunPosition.NauticalDawn:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc - jDateDiff;
+                    jd2000UtcTarget = jDateStart - jDateDiff;
                     break;
                 case SunPosition.NauticalDusk:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc + jDateDiff;
+                    jd2000UtcTarget = jDateStart + jDateDiff;
                     break;
                 case SunPosition.AstronomicalDawn:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc - jDateDiff;
+                    jd2000UtcTarget = jDateStart - jDateDiff;
                     break;
                 case SunPosition.AstronomicalDusk:
-                    jd2000UtcTarget = sunStateSolarNoon.JD2000Utc + jDateDiff;
+                    jd2000UtcTarget = jDateStart + jDateDiff;
                     break;
                 default:
                     throw new ArgumentException("Invalid SunPosition value");
             }
             double julianDayUtcTarget = jd2000UtcTarget + JD2000_EPOCH;
             double julianDayTTTarget = JulianDayTT_from_GCT(JulianDayUT_to_JulianDayGCT(julianDayUtcTarget));
-            dtTarget = dtTarget.AddDays(jd2000UtcTarget - sunStateSolarNoon.JD2000Utc);
+            dtTarget = dtTarget.AddDays(jd2000UtcTarget - jDateStart);
 
             // Calculate the approximate GAST for the target altitude
             double julianDayCheck0h = julianDayUtc0h;
