@@ -700,12 +700,24 @@ namespace SunRiseSet
             int maxIterations = 10
         )
         {
+            // Keep track of the UTC date and time of the target altitude
+            DateTime utcTarget = utcNow;
+            double gastHUtcNowTarget = gastHUtcNow;
+
             // Get the approximate GAST at the target SunPosition
             double gastHTarget = GetApproximateGastHSolarNoonMidnight(sunPositionTarget, longitude, sunRightAscensionDeclinationUtcNow.RightAscension);
 
             // Calculate the target Sun states
-            double diffGastH = gastHTarget - gastHUtcNow;
-            double jd2000UtcTarget = jd2000UtcNow + diffGastH / TimeSpan.FromDays(1).TotalHours;
+            double diffGastH = gastHTarget - gastHUtcNowTarget;
+            utcTarget = utcTarget.AddDays(diffGastH / TimeSpan.FromDays(1).TotalHours);
+
+            // Calculate the total number of days (including fractional days) since J2000 for the target UTC time
+            double julianDayUtcTarget0h = JulianDay(utcTarget);
+            double jd2000UtcTarget = JulianDay_to_JD2000(JulianDay_AddHours(julianDayUtcTarget0h, utcTarget));
+            double julianDayTTTarget = JulianDayTT_with_Hours(utcTarget);
+
+            // Compute local sideral time of the target moment
+            gastHUtcNowTarget = GAST_H(julianDayTTTarget, julianDayUtcTarget0h, utcTarget);
 
             // Iterate to find the precise GAST at the target SunPosition
             int numIterations = 0;
@@ -716,9 +728,15 @@ namespace SunRiseSet
                 sunLongitudeDistanceUtcTarget = GetSunLongitudeDistance(jd2000UtcTarget);
                 sunRightAscensionDeclinationUtcTarget = GetSunRightAscensionDeclination(jd2000UtcTarget, sunLongitudeDistanceUtcTarget);
                 double gastHTargetNew = GetApproximateGastHSolarNoonMidnight(sunPositionTarget, longitude, sunRightAscensionDeclinationUtcTarget.RightAscension);
-                diffGastH = gastHTargetNew - gastHTarget;
-                gastHTarget = gastHTargetNew;
-                jd2000UtcTarget = jd2000UtcTarget + diffGastH / TimeSpan.FromDays(1).TotalHours;
+
+                diffGastH = gastHTargetNew - gastHUtcNowTarget;
+
+                utcTarget = utcTarget.AddDays(diffGastH / TimeSpan.FromDays(1).TotalHours);
+                julianDayUtcTarget0h = JulianDay(utcTarget);
+                jd2000UtcTarget = JulianDay_to_JD2000(JulianDay_AddHours(julianDayUtcTarget0h, utcTarget));
+                julianDayTTTarget = JulianDayTT_with_Hours(utcTarget);
+                gastHUtcNowTarget = GAST_H(julianDayTTTarget, julianDayUtcTarget0h, utcTarget);
+
                 numIterations++;
             }
             LHAAltitudeAzimuth lhaAltitudeAzimuthTarget = GetSunLHAAltitudeAzimuth(
@@ -733,7 +751,7 @@ namespace SunRiseSet
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                DateTimeUTC = utcNow.AddDays(jd2000UtcTarget - jd2000UtcNow),
+                DateTimeUTC = utcTarget,
                 JD2000Utc = jd2000UtcTarget,
                 GastH = gastHTarget,
                 Precision = diffGastH,
@@ -863,12 +881,21 @@ namespace SunRiseSet
                 default:
                     throw new ArgumentException("Invalid SunPosition value");
             }
-            double julianDayUtcTarget = jd2000UtcTarget + JD2000_EPOCH;
-            double julianDayTTTarget = JulianDayTT_from_GCT(JulianDayUT_to_JulianDayGCT(julianDayUtcTarget));
             dtTarget = dtTarget.AddDays(jd2000UtcTarget - jDateStart);
 
+            // Calculate the total number of days (including fractional days) since J2000 for the target UTC time
+            double julianDayUtcTarget0h = JulianDay(dtTarget);
+            jd2000UtcTarget = JulianDay_to_JD2000(JulianDay_AddHours(julianDayUtcTarget0h, dtTarget));
+            double julianDayTTTarget = JulianDayTT_with_Hours(dtTarget);
+
+            // Compute local sideral time of the target moment
+            double gastHTarget = GAST_H(julianDayTTTarget, julianDayUtcTarget0h, dtTarget);
+
+            //double julianDayUtcTarget = jd2000UtcTarget + JD2000_EPOCH;
+            //double julianDayTTTarget = JulianDayTT_from_GCT(JulianDayUT_to_JulianDayGCT(julianDayUtcTarget));
+
             // Calculate the approximate GAST for the target altitude
-            double julianDayCheck0h = julianDayUtc0h;
+            /*double julianDayCheck0h = julianDayUtc0h;
             if (julianDayTTTarget < julianDayCheck0h)
             {
                 julianDayCheck0h -= 1.0;
@@ -877,7 +904,7 @@ namespace SunRiseSet
             {
                 julianDayCheck0h += 1.0;
             }
-            double gastHTarget = GAST_H(julianDayTTTarget, julianDayCheck0h, dtTarget);
+            double gastHTarget = GAST_H(julianDayTTTarget, julianDayCheck0h, dtTarget);*/
 
             // Calculate the Sun's approximate position at the target altitude
             SunLongitudeDistance sunLongitudeDistanceUtcTarget = GetSunLongitudeDistance(jd2000UtcTarget);
@@ -930,10 +957,20 @@ namespace SunRiseSet
             {
                 // Get the amount of GAST to change to reach the target altitude
                 diffGastH = diffAltitude / altitudeRatePerGastH * localMultiplier;
-                gastHTarget = gastHTarget + diffGastH;
+
+                // Update the UTC date and time based on the new GAST
+                dtTarget = dtTarget.AddHours(diffGastH);
+
+                // Calculate the total number of days (including fractional days) since J2000 for the target UTC time
+                julianDayUtcTarget0h = JulianDay(dtTarget);
+                jd2000UtcTarget = JulianDay_to_JD2000(JulianDay_AddHours(julianDayUtcTarget0h, dtTarget));
+                julianDayTTTarget = JulianDayTT_with_Hours(dtTarget);
+
+                // Compute local sideral time of the target moment
+                gastHTarget = GAST_H(julianDayTTTarget, julianDayUtcTarget0h, dtTarget);
 
                 // Get the new J2000 UTC and the Sun's position at the new GAST
-                jd2000UtcTarget = jd2000UtcTarget + diffGastH / TimeSpan.FromDays(1).TotalHours;
+                //jd2000UtcTarget = jd2000UtcTarget + diffGastH / TimeSpan.FromDays(1).TotalHours;
                 sunLongitudeDistanceUtcTarget = GetSunLongitudeDistance(jd2000UtcTarget);
                 sunRightAscensionDeclinationUtcTarget = GetSunRightAscensionDeclination(jd2000UtcTarget, sunLongitudeDistanceUtcTarget);
                 lhaAltitudeAzimuthTarget = GetSunLHAAltitudeAzimuth(
@@ -944,14 +981,21 @@ namespace SunRiseSet
                     sunRightAscensionDeclinationUtcTarget.Declination
                 );
 
-                // Update the UTC date and time based on the new GAST
-                dtTarget = dtTarget.AddHours(diffGastH);
-
                 // If the new altitude is further from the target, reduce the multiplier
                 if (Math.Abs(targetAltitude - lhaAltitudeAzimuthTarget.Altitude) > Math.Abs(diffAltitude))
                 {
-                    gastHTarget = gastHTarget - diffGastH;
-                    jd2000UtcTarget = jd2000UtcTarget - diffGastH / TimeSpan.FromDays(1).TotalHours;
+                    dtTarget = dtTarget.AddHours(-diffGastH);
+
+                    // Calculate the total number of days (including fractional days) since J2000 for the target UTC time
+                    julianDayUtcTarget0h = JulianDay(dtTarget);
+                    jd2000UtcTarget = JulianDay_to_JD2000(JulianDay_AddHours(julianDayUtcTarget0h, dtTarget));
+                    julianDayTTTarget = JulianDayTT_with_Hours(dtTarget);
+
+                    // Compute local sideral time of the target moment
+                    gastHTarget = GAST_H(julianDayTTTarget, julianDayUtcTarget0h, dtTarget);
+
+                    //gastHTarget = gastHTarget - diffGastH;
+                    //jd2000UtcTarget = jd2000UtcTarget - diffGastH / TimeSpan.FromDays(1).TotalHours;
                     sunLongitudeDistanceUtcTarget = GetSunLongitudeDistance(jd2000UtcTarget);
                     sunRightAscensionDeclinationUtcTarget = GetSunRightAscensionDeclination(jd2000UtcTarget, sunLongitudeDistanceUtcTarget);
                     lhaAltitudeAzimuthTarget = GetSunLHAAltitudeAzimuth(
@@ -961,7 +1005,6 @@ namespace SunRiseSet
                         sunRightAscensionDeclinationUtcTarget.RightAscension,
                         sunRightAscensionDeclinationUtcTarget.Declination
                     );
-                    dtTarget = dtTarget.AddHours(-diffGastH);
                     numIterations++;
                     if (localMultiplier > 1)
                     {
